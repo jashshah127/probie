@@ -478,7 +478,7 @@ class Game:
         self.boss_cap = boss_cap_usd if boss_cap_usd is not None else round(cap_usd * 0.3, 2)
         self.voice = VoiceDesk(transcriber, config.run.runs_dir, config)
         self.reader = next((s for s in self.models.values() if s.invoice_input == "document"), None)
-        self.paper_limits = RateLimit(per_hour=3, per_day=8)
+        self.paper_limits = RateLimit(per_hour=10, per_day=30)
         self.targets = targets_from(cases)
         if not self.targets:
             raise GameError("There are no genuine invoices to build scams on. Generate the cases first.")
