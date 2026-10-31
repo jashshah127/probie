@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "probie"
+version = "0.1.0"
+description = "Find which accounts payable work each Meta model can be trusted with."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Jash Shah" }]
+dependencies = []
+
+[project.optional-dependencies]
+browser-tests = ["playwright>=1.40"]
+# Keeps the game's scoreboard across container restarts, by syncing it to a Hugging Face dataset.
+keep-scores = ["huggingface_hub>=0.23"]
+
+[project.scripts]
+probie = "probie.cli:main"
+
+[tool.setuptools]
+packages = ["probie"]
+
+[tool.setuptools.package-data]
+probie = ["*.html"]

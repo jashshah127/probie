@@ -1,0 +1,13 @@
+.env
+data/
+runs/
+demo/
+report.html
+report.json
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+build/
+dist/
+.DS_Store

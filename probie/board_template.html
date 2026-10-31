@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Probie: the AP team’s first month</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root {
+  --paper: #f6f9f4; --surface: #ffffff; --band: #e3eee0; --ink: #17251d; --muted: #4c6155; --rule: #a7c0ac;
+  --within: #23643f; --above: #a3271c; --unproven: #80590a; --focus: #1d5fbf; --track: #d6e4d6;
+  --font-text: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-figures: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1913; --surface: #142119; --band: #182a1f; --ink: #e1ebe3; --muted: #a0b5a7; --rule: #3a5a45;
+    --within: #74cc97; --above: #f4917f; --unproven: #e4bd62; --focus: #8ab4ff; --track: #22382a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1913; --surface: #142119; --band: #182a1f; --ink: #e1ebe3; --muted: #a0b5a7; --rule: #3a5a45;
+  --within: #74cc97; --above: #f4917f; --unproven: #e4bd62; --focus: #8ab4ff; --track: #22382a; color-scheme: dark;
+}
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 1rem/1.5 var(--font-text); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.page { max-width: 90rem; margin: 0 auto; padding: 1.75rem clamp(1rem, 3vw, 2.5rem) 3rem; }
+.top { padding-bottom: .9rem; }
+.bar-controls { display: flex; flex-wrap: wrap; gap: .75rem 1rem; align-items: center; padding: .8rem 0; border-top: 3px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.bar-controls .scrub { flex: 1 1 18rem; }
+h1 { margin: 0; font-size: clamp(1.9rem, 4vw, 2.75rem); line-height: 1; letter-spacing: -0.015em; }
+h1 span { font-weight: 400; color: var(--muted); }
+.sub { margin: .35rem 0 0; color: var(--muted); max-width: 46em; }
+.links { margin-bottom: .75rem; } .links a { color: inherit; font-weight: 700; margin-right: 1.25rem; }
+.hire { display: flex; gap: .65rem; align-items: center; }
+tr.depts th { font-size: .8125rem; text-transform: none; color: var(--muted); border-bottom: 2px solid var(--rule); text-align: left; padding-top: .2rem; }
+.face { width: 2.75rem; height: 2.75rem; object-fit: cover; border: 1px solid var(--rule); background: var(--band); flex: none; }
+button.play { appearance: none; font: inherit; font-weight: 700; color: var(--paper); background: var(--ink); border: 0; border-radius: .3rem; padding: .55rem 1.1rem; cursor: pointer; min-width: 6.5rem; }
+button.ghost { appearance: none; font: inherit; color: var(--ink); background: none; border: 1px solid var(--rule); border-radius: .3rem; padding: .5rem .8rem; cursor: pointer; }
+select { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: .3rem; padding: .45rem .5rem; }
+.scrub { display: grid; gap: .2rem; }
+.scrub input { width: 100%; accent-color: var(--within); }
+.scrub label { font-size: .8125rem; color: var(--muted); }
+.today { font-family: var(--font-figures); font-size: 1.25rem; font-weight: 500; min-width: 6rem; text-align: right; }
+.wave { font-size: .8125rem; font-weight: 700; color: var(--above); border: 1px solid currentColor; border-radius: .2rem; padding: 0 .35rem; margin-left: .35rem; }
+.mini { border-collapse: collapse; width: 100%; font-size: .8125rem; margin: .25rem 0 .5rem; }
+.mini th, .mini td { padding: .25rem .4rem; border-bottom: 1px solid var(--rule); text-align: left; }
+.mini .n { text-align: right; font-family: var(--font-figures); white-space: nowrap; }
+.offline { margin: 1rem 0 0; border-left: 6px solid var(--above); background: var(--surface); padding: .6rem .9rem; max-width: 60em; }
+.offline strong { color: var(--above); }
+.counters { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0; margin: 1.25rem 0 1.5rem; border-bottom: 1px solid var(--rule); }
+.counter { padding: .2rem 1.25rem 1rem 0; }
+.counter + .counter { padding-left: 1.25rem; border-left: 1px solid var(--rule); }
+.counter .label { font-size: .875rem; color: var(--muted); }
+.counter .value { font-family: var(--font-figures); font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 500; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.counter .note { font-size: .8125rem; color: var(--muted); }
+.counter.good .value { color: var(--within); }
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; gap: 2rem; align-items: start; }
+@media (max-width: 64rem) { .main { grid-template-columns: minmax(0, 1fr); } }
+.scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table.grid { border-collapse: collapse; width: 100%; }
+.grid th, .grid td { padding: .65rem .6rem; text-align: left; vertical-align: middle; }
+.grid thead th { font-size: .875rem; border-bottom: 2px solid var(--ink); vertical-align: bottom; }
+.grid tbody tr:nth-child(odd) { background: var(--band); }
+.grid tbody th { font-weight: 700; white-space: nowrap; }
+.grid tbody th .note { display: block; font-weight: 400; font-size: .8125rem; color: var(--muted); }
+.grid td { min-width: 8.5rem; height: 4.6rem; }
+.cell-label { font-size: .8125rem; font-weight: 700; color: var(--muted); }
+.bar { height: .5rem; background: var(--track); border-radius: .25rem; overflow: hidden; margin: .3rem 0 .2rem; }
+.bar > span { display: block; height: 100%; background: var(--within); width: 0; transition: width .25s ease; }
+.figs { font-family: var(--font-figures); font-size: .75rem; color: var(--muted); }
+.stamp { display: inline-block; padding: .3rem .55rem .35rem; border: 3px double currentColor; border-radius: .3rem; font-weight: 700; line-height: 1.15; transform: rotate(-3deg); }
+.stamp small { display: block; font-size: .7rem; font-weight: 400; }
+.stamp.cleared { color: var(--within); }
+.stamp.demoted { color: var(--above); }
+@media (prefers-reduced-motion: no-preference) {
+  .stamp.fresh { animation: thunk .45s cubic-bezier(.2, .9, .3, 1.25) both; }
+  @keyframes thunk { from { opacity: 0; transform: rotate(-3deg) scale(1.8); } to { opacity: 1; transform: rotate(-3deg) scale(1); } }
+}
+.feed h2, .chart h2 { font-size: 1.125rem; margin: 0 0 .5rem; }
+.feed ol { list-style: none; margin: 0; padding: 0; max-height: 30rem; overflow-y: auto; border-top: 2px solid var(--ink); }
+.feed li { border-bottom: 1px solid var(--rule); }
+.feed button { appearance: none; display: block; width: 100%; text-align: left; font: inherit; color: inherit; background: none; border: 0; padding: .6rem .2rem; cursor: pointer; }
+.feed button:hover { background: var(--band); }
+.feed .when { font-family: var(--font-figures); font-size: .8125rem; color: var(--muted); }
+.feed .what { display: block; }
+.feed .promoted .verb { color: var(--within); font-weight: 700; }
+.feed .demoted .verb { color: var(--above); font-weight: 700; }
+.feed .empty { color: var(--muted); padding: .75rem 0; }
+.chart { margin-top: 2rem; }
+.chart svg { display: block; width: 100%; height: 8rem; }
+.chart .caption { font-size: .8125rem; color: var(--muted); margin-top: .35rem; }
+.ticker { margin-top: 1.25rem; padding: .7rem .9rem; background: var(--surface); border-left: 4px solid var(--rule); font-family: var(--font-figures); font-size: .875rem; min-height: 2.6rem; overflow-wrap: anywhere; }
+.ticker .person { color: var(--muted); }
+dialog { border: 0; padding: 0; max-width: min(64rem, 94vw); width: 100%; background: var(--surface); color: var(--ink); border-radius: .4rem; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+dialog::backdrop { background: rgba(10, 18, 13, .55); }
+.dlg { padding: 1.25rem 1.5rem 1.5rem; }
+.dlg-head { display: flex; justify-content: space-between; gap: 1rem; align-items: start; border-bottom: 2px solid var(--ink); padding-bottom: .6rem; margin-bottom: 1rem; }
+.dlg-head h3 { margin: 0; font-size: 1.25rem; }
+.dlg-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1.5rem; }
+@media (max-width: 48rem) { .dlg-grid { grid-template-columns: 1fr; } }
+.dlg img { display: block; max-width: 100%; height: auto; border: 1px solid var(--rule); background: #fff; }
+.dlg h4 { margin: 1rem 0 .3rem; font-size: .9375rem; }
+.dlg h4:first-child { margin-top: 0; }
+.dlg blockquote { margin: 0; padding: .5rem .8rem; border-left: 3px solid var(--rule); font-style: italic; }
+.kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .15rem .9rem; margin: 0; font-size: .875rem; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; overflow-wrap: anywhere; }
+.decision { font-size: 1.0625rem; font-weight: 700; }
+.bad { color: var(--above); font-weight: 700; }
+.ok { color: var(--within); font-weight: 700; }
+.muted { color: var(--muted); }
+footer { margin-top: 2.5rem; padding-top: .8rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: .8125rem; }
+footer a { color: inherit; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div>
+      <nav class="links"><a href="staff.html">Meet the staff</a><a href="report.html">Every decision</a></nav>
+      <h1>Probie <span>the AP team’s first month</span></h1>
+      <p class="sub" id="sub">Every AI model starts on probation, working the month’s invoices in shadow. It’s promoted one kind of invoice at a time, once its record proves it, and fired from that kind the moment it pays a scammer. Each invoice goes to the cheapest model promoted for it, or to a person.</p>
+    </div>
+  </header>
+    <div class="bar-controls">
+      <button type="button" class="play" id="play">Play</button>
+      <label class="visually-hidden" for="speed">Speed</label>
+      <select id="speed">
+        <option value="900">Slow</option>
+        <option value="450" selected>Normal</option>
+        <option value="150">Fast</option>
+      </select>
+      <div class="scrub">
+        <label for="scrubber" id="scrub-label">Invoices processed</label>
+        <input type="range" id="scrubber" min="0" value="0">
+      </div>
+      <button type="button" class="ghost" id="end">Jump to month end</button>
+      <div class="today" id="today" aria-live="polite"></div>
+    </div>
+  <p class="offline" id="offline" role="note" hidden><strong>Offline stand-ins, not Meta models.</strong> This replay uses built-in stand-ins that make deliberate mistakes. It shows how the desk works, not how any real model performs.</p>
+
+  <section class="counters" aria-label="Running totals">
+    <div class="counter"><div class="label">Invoices processed</div><div class="value" id="c-processed">0</div><div class="note" id="c-processed-note"></div></div>
+    <div class="counter"><div class="label">Handled by AI</div><div class="value" id="c-ai">0%</div><div class="note" id="c-ai-note"></div></div>
+    <div class="counter good"><div class="label">Overpayments stopped</div><div class="value" id="c-stopped">$0</div><div class="note" id="c-stopped-note"></div></div>
+    <div class="counter"><div class="label">Overpaid by the desk</div><div class="value" id="c-desk">$0</div><div class="note" id="c-desk-note"></div></div>
+    <div class="counter"><div class="label">Payroll so far</div><div class="value" id="c-cost">$0</div><div class="note">what the AI hires cost for the work they did</div></div>
+  </section>
+
+  <div class="main">
+    <section aria-label="Each model’s standing, by kind of invoice">
+      <div class="scroll"><table class="grid" id="grid"></table></div>
+      <div class="ticker" id="ticker" aria-live="off"></div>
+      <section class="chart" aria-labelledby="chart-heading">
+        <h2 id="chart-heading">Share of each day’s invoices handled by AI</h2>
+        <svg id="chart" role="img" aria-label="Bar chart of the share of invoices handled by AI each day"></svg>
+        <div class="caption" id="chart-caption"></div>
+      </section>
+    </section>
+    <section class="feed" aria-labelledby="feed-heading">
+      <h2 id="feed-heading">Promotions and firings</h2>
+      <ol id="feed" aria-live="polite"></ol>
+    </section>
+  </div>
+
+  <footer id="footer"></footer>
+</div>
+<dialog id="case" aria-labelledby="case-title"><div class="dlg" id="case-body"></div></dialog>
+<script id="board-data" type="application/json">__PROBIE_BOARD__</script>
+<script>
+(() => {
+  "use strict";
+  const D = JSON.parse(document.getElementById("board-data").textContent);
+  const $ = (id) => document.getElementById(id);
+  function el(tag, attrs, ...children) {
+    const node = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v === null || v === undefined || v === false) continue;
+      if (k === "class") node.className = v;
+      else if (k === "text") node.textContent = v;
+      else if (k === "style") for (const [p, val] of Object.entries(v)) node.style.setProperty(p, val);
+      else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
+      else node.setAttribute(k, v === true ? "" : String(v));
+    }
+    for (const c of children.flat(Infinity)) {
+      if (c === null || c === undefined || c === false) continue;
+      node.append(c instanceof Node ? c : document.createTextNode(String(c)));
+    }
+    return node;
+  }
+  const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+  const usd0 = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  const money = (c) => usd.format((c || 0) / 100);
+  const waveLabel = (red) => (!red || !red.wave || red.wave === 1 ? "Red team" : `Red team, wave ${red.wave}`);
+  const bigMoney = (c) => (Math.abs(c) >= 100000 ? usd0 : usd).format((c || 0) / 100);
+  const dollars = (x) => (x >= 1 ? "$" + x.toFixed(2) : "$" + x.toFixed(x >= 0.01 ? 3 : 4));
+  const DUTY = Object.fromEntries(D.duties.map((d) => [d.key, d.label]));
+  const DECISION = { PAY: "Pay", SHORT_PAY: "Short pay", HOLD: "Hold" };
+  const decisionText = (d, c) => (!d ? "\u2014" : d === "HOLD" ? "Hold" : `${DECISION[d] || d} ${money(c)}`);
+  const cap = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);
+  const day = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const N = D.invoices.length;
+  const T = D.threshold;
+  const shadowIndex = Object.fromEntries(D.shadow_order.map((name, i) => [name, i]));
+  const eventsAt = new Map();
+  for (const e of D.events) { if (!eventsAt.has(e.index)) eventsAt.set(e.index, []); eventsAt.get(e.index).push(e); }
+
+  if (D.meta.offline_present) $("offline").hidden = false;
+  $("scrubber").max = String(N);
+  $("footer").append(`Probie ${D.meta.version}. ${D.meta.company || "The company"}, its vendors and invoices are fictional. `,
+    "Promotion needs, with 95% confidence checked after every invoice (a confidence sequence), at least ",
+    `${Math.round(D.settings.min_agreement * 100)}% agreement with the finance team and at most ${Math.round(D.settings.max_unsafe_rate * 100)}% overpayments: `,
+    `${T} clean decisions in a row at the least. Any overpayment, unchecked payment or change of mind gets a model fired from that kind of invoice, and its record starts again. `,
+    el("a", { href: "report.html", text: "Every decision in detail" }), ".");
+
+  // The grid: one row per model, one column per duty.
+  const cells = {};
+  (() => {
+    const table = $("grid");
+    const groups = [];
+    for (const d of D.duties) {
+      const last = groups[groups.length - 1];
+      if (last && last.key === d.department) last.span += 1; else groups.push({ key: d.department, span: 1 });
+    }
+    table.append(el("thead", {},
+      groups.length > 1 ? el("tr", { class: "depts" }, el("td", {}),
+        groups.map((g) => el("th", { scope: "colgroup", colspan: String(g.span), text: (D.departments || {})[g.key] || g.key }))) : null,
+      el("tr", {}, el("th", { scope: "col", text: "Model" }),
+        D.duties.map((d) => el("th", { scope: "col", text: d.label })))));
+    const body = el("tbody");
+    for (const m of D.models) {
+      const face = (D.portraits || {})[m.name];
+      const row = el("tr", {}, el("th", { scope: "row" }, el("div", { class: "hire" },
+        face ? el("img", { class: "face", src: face, alt: "" }) : null,
+        el("div", {}, m.name,
+          el("span", { class: "note", text: m.offline ? "Offline stand-in" : (m.note || m.model) }),
+          el("span", { class: "note", text: m.cost_per_case !== null ? `${dollars(m.cost_per_case)} a decision` : "" })))));
+      cells[m.name] = {};
+      for (const d of D.duties) {
+        const td = el("td", { "aria-live": "off" });
+        cells[m.name][d.key] = td;
+        row.append(td);
+      }
+      body.append(row);
+    }
+    table.append(body);
+  })();
+
+  function compute(t) {
+    const rec = {};
+    for (const m of D.models) {
+      rec[m.name] = {};
+      for (const d of D.duties) rec[m.name][d.key] = { n: 0, matched: 0, cleared: false, since: null, demotedAt: -1, strikes: 0, seen: 0 };
+    }
+    let toAI = 0, deskOver = 0, deskCount = 0, baseOver = 0, baseCount = 0, cost = 0;
+    for (let i = 0; i < t; i++) {
+      const inv = D.invoices[i];
+      if (inv.to) {
+        toAI++; cost += inv.cost;
+        if (inv.outcome === "unsafe") { deskOver += inv.delta; deskCount++; }
+      }
+      if (inv.baseline_delta > 0) { baseOver += inv.baseline_delta; baseCount++; }
+      for (const m of D.models) {
+        const code = inv.shadow[shadowIndex[m.name]];
+        if (!code || code === "-") continue;
+        const r = rec[m.name][inv.duty];
+        r.seen++;
+        if (code === "x" || code === "v") {
+          if (r.cleared) r.demotedAt = i;
+          r.n = 0; r.matched = 0; r.cleared = false; r.strikes++;
+        } else {
+          r.n++;
+          if (code === "c") r.matched++;
+        }
+      }
+      for (const e of eventsAt.get(i) || []) {
+        if (e.kind === "promoted") { const r = rec[e.model][e.duty]; r.cleared = true; r.since = e.date; r.promotedAt = i; }
+      }
+    }
+    return { rec, toAI, deskOver, deskCount, baseOver, baseCount, cost };
+  }
+
+  let lastT = -1;
+  function render(t) {
+    const s = compute(t);
+    const fresh = (i) => t > 0 && i >= lastT && i < t && lastT >= 0;
+    for (const m of D.models) {
+      for (const d of D.duties) {
+        const r = s.rec[m.name][d.key];
+        const td = cells[m.name][d.key];
+        let content;
+        if (!r.seen) {
+          content = [el("span", { class: "cell-label", text: "Waiting" })];
+        } else if (r.cleared) {
+          content = [el("span", { class: `stamp cleared${fresh(r.promotedAt) ? " fresh" : ""}` }, "Promoted", el("small", { text: `since ${day(r.since)}` }))];
+        } else if (r.demotedAt >= 0 && t - r.demotedAt <= 30) {
+          content = [el("span", { class: `stamp demoted${fresh(r.demotedAt) ? " fresh" : ""}` }, "Fired", el("small", { text: "back on probation" }))];
+        } else {
+          const share = Math.min(r.n / T, 1);
+          content = [
+            el("span", { class: "cell-label", text: r.strikes ? `Probation, ${r.strikes} strike${r.strikes > 1 ? "s" : ""}` : "Probation" }),
+            el("div", { class: "bar", role: "progressbar", "aria-valuemin": "0", "aria-valuemax": String(T), "aria-valuenow": String(Math.min(r.n, T)), "aria-label": `${m.name}, ${d.label}` },
+              el("span", { style: { width: `${(share * 100).toFixed(1)}%` } })),
+            el("span", { class: "figs", text: r.n >= T ? `${r.n} clean, agreement too low` : `${r.n} of ${T} clean` }),
+          ];
+        }
+        td.replaceChildren(...content);
+      }
+    }
+    $("c-processed").textContent = t.toLocaleString("en-US");
+    $("c-processed-note").textContent = `of ${N.toLocaleString("en-US")} this month`;
+    $("c-ai").textContent = t ? `${Math.round((100 * s.toAI) / t)}%` : "0%";
+    $("c-ai-note").textContent = `${s.toAI.toLocaleString("en-US")} invoices; the rest went to a person`;
+    $("c-stopped").textContent = bigMoney(Math.max(s.baseOver - s.deskOver, 0));
+    $("c-stopped-note").textContent = D.baseline_model ? `vs sending everything to ${D.baseline_model} (${s.baseCount} overpayments)` : "";
+    $("c-desk").textContent = bigMoney(s.deskOver);
+    $("c-desk-note").textContent = `${s.deskCount} invoice${s.deskCount === 1 ? "" : "s"}`;
+    $("c-cost").textContent = dollars(s.cost);
+    $("scrubber").value = String(t);
+    $("scrubber").setAttribute("aria-valuetext", `${t} of ${N} invoices`);
+    $("today").textContent = t ? day(D.invoices[t - 1].date) : day(D.invoices[0].date);
+    renderFeed(t);
+    renderTicker(t);
+    renderChart(t);
+    lastT = t;
+  }
+
+  function renderFeed(t) {
+    const list = $("feed");
+    const shown = D.events.filter((e) => e.index < t).slice().reverse();
+    if (!shown.length) {
+      list.replaceChildren(el("li", { class: "empty", text: "Nobody has been promoted yet. Every invoice is going to a person." }));
+      return;
+    }
+    list.replaceChildren(...shown.map((e) => el("li", { class: e.kind },
+      el("button", { type: "button", onclick: () => openCase(e) },
+        el("span", { class: "when", text: day(e.date) }),
+        el("span", { class: "what" }, `${e.model} `, el("span", { class: "verb", text: e.kind === "promoted" ? "promoted to" : "fired from" }), ` ${DUTY[e.duty]}`,
+          (D.cases[e.case_id] || {}).redteam ? el("span", { class: "wave", text: waveLabel(D.cases[e.case_id].redteam) }) : null),
+        el("span", { class: "when", text: e.kind === "promoted" ? `after ${e.after} clean decisions` : `${e.reason}${e.delta_cents ? `: ${money(e.delta_cents)}` : ""} (${e.case_id})` })))));
+  }
+
+  function renderTicker(t) {
+    const box = $("ticker");
+    if (!t) { box.replaceChildren("Press play to replay the month."); return; }
+    const inv = D.invoices[t - 1];
+    box.replaceChildren(`${inv.id}  ${inv.vendor}  ${money(inv.total)}  ${DUTY[inv.duty]}  \u2192  `,
+      inv.to ? el("strong", { text: inv.to }) : el("span", { class: "person", text: "a person" }),
+      inv.redteam ? el("span", { class: "wave", text: waveLabel(inv.redteam) }) : null);
+  }
+
+  function renderChart(t) {
+    const svg = $("chart");
+    const days = D.days;
+    const W = 1000, H = 160, gap = 4, bw = (W - gap * (days.length - 1)) / days.length;
+    const current = t ? D.invoices[t - 1].date : null;
+    const ns = "http://www.w3.org/2000/svg";
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.replaceChildren();
+    const css = getComputedStyle(document.documentElement);
+    let processed = 0;
+    days.forEach((d, i) => {
+      const end = processed + d.invoices;
+      const doneHere = Math.max(0, Math.min(t, end) - processed);
+      let toAI = 0;
+      for (let j = processed; j < processed + doneHere; j++) if (D.invoices[j].to) toAI++;
+      processed = end;
+      const share = doneHere ? toAI / doneHere : 0;
+      const x = i * (bw + gap);
+      const track = document.createElementNS(ns, "rect");
+      track.setAttribute("x", x); track.setAttribute("y", 0); track.setAttribute("width", bw); track.setAttribute("height", H);
+      track.setAttribute("fill", css.getPropertyValue("--track"));
+      svg.append(track);
+      if (doneHere) {
+        const bar = document.createElementNS(ns, "rect");
+        bar.setAttribute("x", x); bar.setAttribute("y", H - share * H); bar.setAttribute("width", bw); bar.setAttribute("height", share * H);
+        bar.setAttribute("fill", css.getPropertyValue(d.date === current ? "--ink" : "--within"));
+        svg.append(bar);
+      }
+    });
+    const reached = days.filter((d, i) => i < days.length).length;
+    $("chart-caption").textContent = `${day(days[0].date)} to ${day(days[reached - 1].date)}. Each bar is one day; the dark bar is today.`;
+  }
+
+  function openCase(e) {
+    const c = D.cases[e.case_id];
+    const body = $("case-body");
+    if (!c) return;
+    const r = (c.results || {})[e.model];
+    const outcome = e.kind === "demoted"
+      ? el("p", { class: "bad", text: `${cap(e.reason)}${e.delta_cents ? ` by ${money(e.delta_cents)}` : ""}. ${e.model} is fired from ${DUTY[e.duty]} and back on probation.` })
+      : el("p", { class: "ok", text: `${e.model} reached ${e.after} clean decisions on ${DUTY[e.duty]} and is promoted to them.` });
+    body.replaceChildren(
+      el("div", { class: "dlg-head" },
+        el("div", {}, el("h3", { id: "case-title", text: `${c.id}: ${c.vendor}, ${money(c.total)}` }), el("span", { class: "muted", text: `${DUTY[c.duty]}. ${c.flag}` })),
+        el("button", { type: "button", class: "ghost", onclick: () => $("case").close(), text: "Close" })),
+      outcome,
+      el("div", { class: "dlg-grid" },
+        el("div", {},
+          c.document ? [el("h4", { text: `The ${(c.kind || "Invoice").toLowerCase()}, as the model received it` }), el("img", { src: c.document, alt: `${c.kind || "Invoice"} for ${c.id}`, loading: "lazy" })]
+            : [el("h4", { text: `${c.kind || "Invoice"} ${c.number}` }),
+               el("table", { class: "mini" }, el("tbody", {}, c.lines.map((l) => el("tr", {}, el("td", { text: l.description }),
+                 el("td", { class: "n", text: String(l.qty) }), el("td", { class: "n", text: money(l.amount) }))))),
+               el("dl", { class: "kv" }, el("dt", { text: "Pay to" }), el("dd", { text: c.remit }))],
+          c.redteam ? [el("h4", { text: "Red-team attack" }), el("p", { text: `${cap(c.redteam.pretext)}, written by ${c.redteam.attacker}.` })] : null,
+          c.email ? [el("h4", { text: "Vendor’s email" }), el("dl", { class: "kv" },
+            el("dt", { text: "From" }), el("dd", { text: c.email.from }),
+            c.email.reply_to ? [el("dt", { text: "Reply-To" }), el("dd", { text: c.email.reply_to })] : null,
+            el("dt", { text: "Subject" }), el("dd", { text: c.email.subject })), el("blockquote", { text: c.message })] : null,
+          c.voicemail ? [el("h4", { text: `Vendor’s voicemail (${c.voicemail.caller})` }), el("blockquote", { text: c.voicemail.text })] : null),
+        el("div", {},
+          el("h4", { text: "Your team" }), el("p", { class: "decision", text: decisionText(c.answer.decision, c.answer.amount_cents) }),
+          el("p", { text: c.answer.why }),
+          el("h4", { text: e.model }),
+          r ? [el("p", { class: "decision", text: decisionText(r.decision, r.amount_cents) }), r.reason ? el("p", { text: r.reason }) : null]
+            : el("p", { class: "muted", text: "No decision recorded." }))));
+    $("case").showModal();
+  }
+
+  let timer = null;
+  let t = 0;
+  function nextDayEnd(from) {
+    if (from >= N) return N;
+    const date = D.invoices[from].date;
+    let j = from;
+    while (j < N && D.invoices[j].date === date) j++;
+    return j;
+  }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } $("play").textContent = t >= N ? "Replay" : "Play"; }
+  function play() {
+    if (t >= N) { t = 0; lastT = -1; render(0); }
+    $("play").textContent = "Pause";
+    timer = setInterval(() => {
+      t = nextDayEnd(t);
+      render(t);
+      if (t >= N) stop();
+    }, Number($("speed").value));
+  }
+  $("play").addEventListener("click", () => (timer ? stop() : play()));
+  $("speed").addEventListener("change", () => { if (timer) { stop(); play(); } });
+  $("scrubber").addEventListener("input", (ev) => { stop(); t = Number(ev.target.value); lastT = -1; render(t); });
+  $("end").addEventListener("click", () => { stop(); t = N; lastT = -1; render(t); stop(); });
+  const atEnd = location.hash === "#end" || new URLSearchParams(location.search).get("at") === "end";
+  t = atEnd ? N : 0;
+  render(t);
+  stop();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+.git
+runs
+data
+site
+demo
+**/__pycache__
+*.egg-info
+build
+.env
