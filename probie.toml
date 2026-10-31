@@ -149,7 +149,7 @@ price_output = 4.25
 # The public game, "Can you get Probie fired?": the probies players can try to con, the most the
 # game may spend (inside the $149 limit), and how many attempts each player gets.
 [game]
-models = ["glimmer-fireworks", "muse-spark-low", "spark-open-baseten", "muse-wonder"]
+models = ["muse-spark-low", "muse-spark-high", "muse-wonder"]
 # The senior hire: harder to con, and locked until someone gets a cheaper probie fired.
 boss = "muse-wonder"
 # The senior hire costs about ten times a cheap probie, so it gets its own slice of cap_usd.
