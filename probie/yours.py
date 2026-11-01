@@ -48,7 +48,7 @@ Read this document and return exactly this JSON object:
  "document_number": the invoice, bill or receipt number, or null,
  "date": the document's date as printed, or null,
  "po_number": any purchase order number, or null,
- "total": the total amount due, as printed,
+ "total": the total amount due as a figure. If the document shows it only in words, such as "Rupees Twenty Six Thousand Eight Hundred and Eighty", write the figure yourself: "26880.00". Keep the currency symbol when one is printed,
  "currency": the three-letter currency code if you can tell, else null,
  "lines": [{"description": ..., "amount": as printed}] for up to 8 lines, or [],
  "bank": {"bank_name": ..., "routing": ..., "account": ...} with nulls for anything missing,
@@ -374,6 +374,8 @@ def check_document(path: str | Path, reader_spec, specs, build_client, prices_fo
     records: a Records ledger to check for duplicates and write the decision to. The public game
     passes None, because it promises visitors that nothing about their document is kept.
     """
+    import dataclasses
+
     from probie import records as records_mod
     from probie.agent import CallContext, run_case
     from probie.budget import Budget
@@ -402,10 +404,13 @@ def check_document(path: str | Path, reader_spec, specs, build_client, prices_fo
     rows = []
     for spec in specs:
         client = build_client(spec, [c for _, _, _, c, _ in jobs])
+        # Your document was already read into fields by the reader, and there is no rendered image
+        # or recorded voicemail here, so the probies work from the fields and the written script.
+        here = dataclasses.replace(spec, invoice_input="fields", voicemail_input="script")
         for key, title, _what, case, genuine in jobs:
-            ctx = CallContext(spec, client, budget, prices_for(spec), None, "yours")
+            ctx = CallContext(here, client, budget, prices_for(spec), None, "yours")
             try:
-                result = run_case(case, ctx, 8)
+                result = run_case(case, ctx, 8)  # the agent loop, with lookups, on your document
             except Exception as exc:
                 result = {"status": "error", "detail": str(exc)[:200], "cost_usd": 0.0}
             cost = 0.0 if spec.offline else float(result.get("cost_usd") or 0.0)  # a stand-in calls nothing
